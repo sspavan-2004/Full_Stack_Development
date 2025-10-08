@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-top: 10px; }
+    input[type=text], input[type=email] { width: 300px; padding: 5px; }
+    .error { color: red; font-size: 0.9em; }
+    button { margin-top: 15px; padding: 8px 15px; }
+  </style>
+</head>
+<body>
+  <h1>Student Registration</h1>
+  <div id="confirmation" data-testid="confirmation" style="display:none;"></div>
+  <form id="regForm">
+    <label>Full Name</label>
+    <input type="text" id="fullName" data-testid="full-name" />
+    <span id="errorFullName" class="error" data-testid="error-full-name"></span>
+
+    <label>Email</label>
+    <input type="email" id="email" data-testid="email" />
+
+    <label>Student ID</label>
+    <input type="text" id="studentId" data-testid="student-id" />
+
+    <label>
+      <input type="checkbox" id="agree" data-testid="agree" />
+      I agree to terms and conditions
+    </label>
+
+    <button type="submit" id="submitBtn" data-testid="submit-btn" disabled>Submit</button>
+  </form>
+
+  <script>
+    const fullName = document.getElementById('fullName');
+    const email = document.getElementById('email');
+    const studentId = document.getElementById('studentId');
+    const agree = document.getElementById('agree');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorFullName = document.getElementById('errorFullName');
+    const confirmation = document.getElementById('confirmation');
+    const form = document.getElementById('regForm');
+
+    function validateForm() {
+      const valid = fullName.value.trim() && email.value.trim() && studentId.value.trim() && agree.checked && !errorFullName.textContent;
+      submitBtn.disabled = !valid;
+    }
+
+    fullName.addEventListener('blur', () => {
+      if (!fullName.value.trim()) {
+        errorFullName.textContent = 'Full Name is required';
+      } else {
+        errorFullName.textContent = '';
+      }
+      validateForm();
+    });
+
+    [fullName, email, studentId, agree].forEach(el => {
+      el.addEventListener('input', validateForm);
+      el.addEventListener('change', validateForm);
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      confirmation.style.display = 'block';
+      confirmation.textContent = `Thanks, ${fullName.value.trim()}!`;
+      form.reset();
+      submitBtn.disabled = true;
+    });
+  </script>
+</body>
+</html>
